@@ -771,3 +771,35 @@ PipedInputStream、PipedOutputStream、PipeReader、PipeWriter。這四種也是
 - ZIP將文件歸檔和壓縮
 
 要提供壓縮功能，只要把它們包在已有的I/O類的外面即可。這些 class 不是衍生自 Reader 和 Writer ，而是 InputStream 和 OutStreamput 的子類。這是因為壓縮的程式庫是處理 byte 而不是字元的。(可運用 InputStreamReader 和 OutputStreamWriter 提供 streams 之間的轉換)
+
+```java
+import java.io.*;
+import java.util.zip.*;
+
+public class Gzip {
+	public static void main(String[] args) throws IOException{
+		BufferedReader in = new BufferedReader(
+				new FileReader("test.txt"));
+		//OutputStream 包裝成 GZIPOutputStream 
+		BufferedOutputStream out = new BufferedOutputStream(
+				new GZIPOutputStream(
+						new FileOutputStream("test.txt.gz")));
+		System.out.println("Writing file");
+		
+		int c;
+		while((c = in.read()) != -1)
+			out.write(c);
+		in.close();
+		out.close();
+		System.out.println("Reading file");
+		//InputStream 包裝成 GZIPInputStream
+		BufferedReader in2 = new BufferedReader(
+				new InputStreamReader(new GZIPInputStream(
+						new FileInputStream("test.txt.gz"))));
+		String s;
+		while((s = in2.readLine()) != null)
+			System.out.println(s);	
+	}
+}
+
+```
