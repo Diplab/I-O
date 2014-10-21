@@ -32,7 +32,7 @@ Thinking in Java Ch 18
 
 當使用程式軟體處理重要資料時，會與檔案的存取有莫大的關係，因為重要的資料最終要存放在檔案中。而且在有需要的時侯，程式還可以將檔案內的資料讀取出來，或再將更新過的資料存入檔案中。
 
-Java 的 I/O 機制建立在串流（stream）的基礎之上，能有效簡化讀寫不同資料型態的程序。Java 為各種應用領域提供了各式各樣的串流， 串流的世界可分成兩大類型：用於讀寫二元資料的 InputStream 與 OutputStream ，以及用於讀寫文字的 Reader 與 Writer。Java 也提供了能讀取加密資料以及能自動壓縮資料。
+Java 的 I/O 機制建立在串流（stream）的基礎之上，能有效簡化讀寫不同資料型態的程序。Java 為各種應用領域提供了各式各樣的串流， 串流的世界可分成兩大類型：用於讀寫二元資料的 InputStream 與 OutputStream ，以及用於讀寫文字的 Reader 與 Writer。Java 也提供了自動壓縮資料。
 
 ![Stream.png](img/Stream.png)
 
@@ -45,7 +45,7 @@ java.io.File 提供一個抽象的、與系統獨立的路徑表示，給它一�
 
 ```java
 import java.io.*;
-public class FileDome {
+public class FileDemo {
 
 	public static void main(String[] args) throws IOException{
 		File dir = new File("txt");
