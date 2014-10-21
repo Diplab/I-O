@@ -7,21 +7,21 @@ Thinking in Java Ch 18
 - [前言](#前言)
 - [File Class](#file class)
 - [位元串流](#位元串流)
-- [InputStream、OutputStream](#inputstream、outputstream)
-  + [FileInputStream、FileOutputStream](#fileinputstream、fileoutputstream)
-  + [ByteArrayInputStream、ByteArrayOutputStream](#bytearrayinputstream、bytearrayoutputstream)
-  + [FilterInputStream、FilterOutputStream](#filterinputstream、filteroutputstream)
-    * [BufferedInputStream、BufferedOutputStream](#bufferedinputstream、bufferedoutputstream)
-    * [DataInputStream、DataOutputStream](#datainputstream、dataoutputstream)
+- [InputStream、OutputStream](#inputstream%E3%80%81outputstream)
+  + [FileInputStream、FileOutputStream](#fileinputstream%E3%80%81fileoutputstream)
+  + [ByteArrayInputStream、ByteArrayOutputStream](#bytearrayinputstream%E3%80%81bytearrayoutputstream)
+  + [FilterInputStream、FilterOutputStream](#filterinputstream%E3%80%81filteroutputstream)
+    * [BufferedInputStream、BufferedOutputStream](#bufferedinputstream%E3%80%81bufferedoutputstream)
+    * [DataInputStream、DataOutputStream](#datainputstream%E3%80%81dataoutputstream)
     * [PrintStream](#printstream)
-  + [ObjectInputStream、ObjectOutputStream](#objectinputstream、objectoutputstream)
+  + [ObjectInputStream、ObjectOutputStream](#objectinputstream%E3%80%81objectoutputstream)
 
 - [字元串流](#字元串流)
 - [Reader、Writer](#reader、writer)
-  + [InputStreamReader、OutputStreamWriter](#inputstreamreader、outputstreamwriter)
-    * [FileReader、FileWriter](#filereader、filewriter)
-  + [BufferedReader、BufferedWriter](#bufferedreader、bufferedwriter)
-  + [CharArrayReader、CharArrayWriter](#chararrayreader、chararraywriter)
+  + [InputStreamReader、OutputStreamWriter](#inputstreamreader%E3%80%81outputstreamwriter)
+    * [FileReader、FileWriter](#filereader%E3%80%81filewriter)
+  + [BufferedReader、BufferedWriter](#bufferedreader%E3%80%81bufferedwriter)
+  + [CharArrayReader、CharArrayWriter](#chararrayreader%E3%80%81chararraywriter)
   + [PrintWriter](#printwriter)
 - [RandomAccessFile Class](#randomaccessfile class)
 - [管線化串流](#管線化串流)
@@ -357,9 +357,44 @@ public class DataStreamDemo {
 
 如果要直接儲存物件，定義該物件的類別必須實作 java.io.Serializable 介面，不過 Serializable 介面中並沒有規範任何必須實作的方法，所以這邊所謂實作的意義，其實像是對物件貼上一個標誌，代表該物件是「可序列化的」（Serializable）。
 
-為了說明如何直接儲存物件，先來實作一個 User 類別。
+首先必須先實作一個 User class
 
+```java
+package object;
 
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private String name;
+    private int number; 
+
+    public User() { 
+    } 
+
+    public User(String name, int number) { 
+        this.name = name; 
+        this.number = number; 
+    } 
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public String getName() { 
+        return name; 
+    } 
+
+    public int getNumber() { 
+        return number; 
+    } 
+}
+```
 
 
 ## 字元串流
