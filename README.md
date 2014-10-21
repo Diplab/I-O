@@ -450,6 +450,10 @@ public class ObjectDemo {
 
 ```
 ## 字元串流
+
+- 純文字檔案
+- 對串流資料以一個字元（兩個位元組）的長度為單位來處理
+
 ## Reader Writer
 
 ![Reader.png](img/Reader.png)
@@ -457,13 +461,304 @@ public class ObjectDemo {
 
 
 ### InputStreamReader OutputStreamWriter
+
+進行字元處理，可以使用 java.io.InputStreamReader、java.io.OutputStreamWriter 為它們加上字元處理的功能。
+
+舉個例子來說，若想要顯示純文字檔案的內容，不用自行判斷字元編碼(中文或英文)，只要將 InputStream、OutputStream 的實例作為建構 InputStreamReader、OutputStreamWriter 時的引數，就可以進行文字檔案的讀取，自動字元判斷與轉換。
+
+```java
+import java.io.*;
+
+public class StreamReaderWriter {
+    public static void main(String[] args) {
+        try { 
+            FileInputStream fileInputStream = new FileInputStream("test.txt"); 
+            // 為FileInputStream加上字元處理功能
+            InputStreamReader inputStreamReader =  new InputStreamReader(fileInputStream); 
+
+            FileOutputStream fileOutputStream = new FileOutputStream("backup_" + "test.txt"); 
+            // 為FileOutputStream加上字元處理功能
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream); 
+
+            int i = 0; 
+            // 以字元方式顯示檔案內容 
+            while((i = inputStreamReader.read()) != -1) { 
+                System.out.print((char) i); 
+                outputStreamWriter.write(i); 
+            } 
+            System.out.println(); 
+
+            inputStreamReader.close(); 
+            outputStreamWriter.close(); 
+        } 
+        catch(ArrayIndexOutOfBoundsException e) { 
+            System.out.println("沒有指定檔案");
+        } 
+        catch(IOException e) { 
+            e.printStackTrace(); 
+        } 
+    }
+} 
+```
+
+InputStreamReader、OutputStreamWriter 在存取時是以系統的預設字元編碼來進行字元轉換，也可以自行指定字元編碼，例如指定讀取檔案時的字元編碼為 Big5：
+
+    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "Big5");
+
+
 #### FileReader FileWriter
 
+如果想要存取的是一個文字檔案，可以直接使用 FileReader、FileWriter 。可以直接指定檔案名稱或 File 物件來開啟指定的文字檔案，並讀入串流轉換後的字元，字元的轉換會根據系統預設的編碼（若要指定編碼，則還是使用 InputStreamReader 與 OutputStreamWriter）。
+
+```java
+import java.io.File;
+import java.io.*;
+
+public class ReaderWriter {
+
+	public static void main(String[] args) throws IOException{
+		File file = new File("note.txt");
+		String note = "今天是星期二";
+		FileWriter fw = new FileWriter(file);
+		fw.write(note);
+		fw.close();
+		
+		FileReader fr = new FileReader(file);
+		int i = 0;
+		while((i = fr.read()) != -1)//讀入值-1代表讀完
+			System.out.print((char)i);
+		fr.close();	
+	}
+}
+
+```
+
 ### BufferedReader BufferedWriter
+
+當 BufferedReader 在讀取文字檔案時，會先從檔案中讀入字元資料並置入緩衝區，若使用 read() 方法時，會先從緩衝區中進行讀取，如果緩衝區資料不足，才會再從檔案中讀取，使用 BufferedWriter 時，寫入的資料並不會先輸出至目的地，而是先儲存至緩衝區中，如果緩衝區中的資料滿了，才會一次對目的地進行寫出，因此可減少資料存取次數，並提升效率。
+
+```java
+import java.io.*;
+import java.util.*;
+
+public class BufferReaderWriter {
+	public static void main(String[] args)  throws IOException{
+		File file = new File("note.txt");
+		Date date = new Date();
+		FileWriter fw = new FileWriter(file);
+		BufferedWriter bw = new BufferedWriter(fw);
+		PrintWriter pw = new PrintWriter(bw);
+		pw.printf("%tF %<tT", date);
+		
+		pw.close();
+		bw.close();
+		fw.close();
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		String str = "#";
+		while((str= br.readLine()) != null)
+			System.out.print(str);
+		br.close();
+		fr.close();	
+	}
+}
+```
+
 ### CharArrayReader CharArrayWriter
+
+使用它們可以將字元陣列當作字元資料輸出或輸入的來源。
+```java
+import java.io.*;
+import java.util.*;
+
+public class CharArrayReaderWriter {
+    public static void main(String[] args) {
+        try { 
+            File file = new File("test.txt"); 
+            BufferedReader bufInputReader =  new BufferedReader(  new FileReader(file)); 
+
+            // 將檔案讀入字元陣列 
+            CharArrayWriter charArrayWriter =  new CharArrayWriter(); 
+            char[] array = new char[1]; 
+            while(bufInputReader.read(array) != -1) {
+                charArrayWriter.write(array); 
+            }
+
+            charArrayWriter.close(); 
+            bufInputReader.close(); 
+
+            // 顯示字元陣列內容 
+            array = charArrayWriter.toCharArray(); 
+            for(int i = 0; i < array.length; i++) 
+                System.out.print(array[i] + " "); 
+            System.out.println(); 
+
+            // 讓使用者輸入位置與字元修改字元陣列內容 
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("輸入修改位置："); 
+            int pos = scanner.nextInt(); 
+            System.out.print("輸入修改字元："); 
+            char ch = scanner.next().charAt(0); 
+            array[pos-1] = ch; 
+
+            // 將字元陣列內容存回檔案 
+            CharArrayReader charArrayReader =  new CharArrayReader(array); 
+            BufferedWriter bufWriter = new BufferedWriter(  new FileWriter(file)); 
+            char[] tmp = new char[1]; 
+            while(charArrayReader.read(tmp) != -1) {
+                bufWriter.write(tmp); 
+            }
+
+            charArrayReader.close();
+            bufWriter.flush(); 
+            bufWriter.close(); 
+        } 
+        catch(ArrayIndexOutOfBoundsException e) { 
+            System.out.println("沒有指定檔案");
+        } 
+        catch(IOException e) { 
+            e.printStackTrace(); 
+        } 
+    }
+}
+```
 ### PrintWriter
 
+PrintWriter 其功能上與 PrintStream 類似，除了接受 OutputStream 實例作為引數之外，PrintWriter 還可以接受 Writer 物件作為輸出的對象，當原先是使用 Writer 物件在作字元處理，而現在想要套用 println() 之類的方法時，使用 PrintWriter 會是比較方便的作法。
+
 ## RandomAccessFile Class
+
+檔案存取通常是「循序的」，每在檔案中存取一次，檔案的讀取位置就會相對於目前的位置前進一次，然而有時候必須指定檔案的某個區段進行讀取或寫入的動作，也就是進行「隨機存取」（Random access），即要能在檔案中隨意的移動讀取位置，這時可以使用 RandomAccessFile，使用 seek() 方法來指定檔案存取的位置，指定的單位是位元組。
+
+為了移動存取位置時的方便，通常在隨機存取檔案中會固定每一筆資料的長度，例如長度固定為每一筆學生個人資料，Java 中並沒有直接的方法可以寫入一筆固定長度資料（像 C/C++ 中的 structure），所以在固定每一筆長度的方面您必須自行設計。
+
+```java
+public class Student {
+    private String name; 
+    private int score; 
+
+    public Student() { 
+        setName("noname"); 
+    } 
+
+    public Student(String name, int score) {
+        setName(name);
+        this.score = score; 
+    } 
+
+    public void setName(String name) {
+        StringBuilder builder = null;
+        if(name != null) 
+            builder = new StringBuilder(name); 
+        else 
+            builder = new StringBuilder(15); 
+
+        builder.setLength(15); // 最長 15 字元
+        this.name = builder.toString();
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getName() { 
+        return name; 
+    } 
+
+    public int getScore() { 
+        return score; 
+    } 
+     // 每筆資料固定寫入34位元組 
+    public static int size() { 
+        return 34; 
+    } 
+} 
+```
+
+```java
+import java.io.*;
+import java.util.*;
+
+public class RandomAccess {
+    public static void main(String[] args) {
+        Student[] students = {
+                new Student("Justin", 90), 
+                new Student("Lisa", 95), 
+                new Student("Tom", 88), 
+                new Student("Alice", 84)}; 
+
+        try {
+            File file = new File("test.txt");
+            // 建立RandomAccessFile實例並以讀寫模式開啟檔案
+            RandomAccessFile randomAccessFile =  new RandomAccessFile(file, "rw"); 
+
+            for(int i = 0; i < students.length; i++) { 
+              // 使用對應的write方法寫入資料
+              randomAccessFile.writeChars(students[i].getName());
+              randomAccessFile.writeInt(students[i].getScore()); 
+            }
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("讀取第幾筆資料？"); 
+
+            int num = scanner.nextInt(); 
+
+            // 使用seek()方法操作存取位置
+            randomAccessFile.seek((num-1) * Student.size()); 
+            Student student = new Student(); 
+
+            // 使用對應的read方法讀出資料
+            student.setName(readName(randomAccessFile));
+            student.setScore(randomAccessFile.readInt());
+
+            System.out.println("姓名：" + student.getName());
+            System.out.println("分數：" + student.getScore());
+
+            // 設定關閉檔案
+            randomAccessFile.close(); 
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            System.out.println("請指定檔案名稱");
+        } 
+        catch(IOException e) { 
+            e.printStackTrace(); 
+        }
+    }
+
+    private static String readName(RandomAccessFile randomAccessfile)
+                               throws IOException { 
+        char[] name = new char[15]; 
+
+        for(int i = 0; i < name.length; i++) 
+            name[i] = randomAccessfile.readChar(); 
+
+        // 將空字元取代為空白字元並傳回
+        return new String(name).replace('\0', ' '); 
+    } 
+} 
+```
+
+RandomAccessFile 的相關方法操作流程：
+
+- 開啟檔案並指定讀寫方式
+
+在 Java 中當實例化一個與檔案相關的輸入輸出類別，就會進行開啟檔案的動作，在實例化的同時要指定檔案是要以讀出（r）、寫入（w）或可讀可寫（rw）的方式開啟，可以將檔案看到是一個容器，要讀出或寫入資料都必須打開容器的瓶蓋。
+
+- 使用對應的寫入方法
+
+要對檔案進行寫入，要使用對應的寫入方法，在 Java 中通常是 write 的名稱作為開頭。
+
+- 使用對應的讀出方法
+
+要對檔案進行讀出，要使用對應的讀出方法，在 Java 中通常是 read 的名稱作為開頭。
+
+- 關閉檔案
+
+不進行讀出或寫入時，就要將他關閉，對於某些檔案存取物件來說，關閉檔案的動作意味著將「緩衝區」（Buffer）的資料全部寫入檔案，如果不作關閉檔案的動作，某些資料可能沒有寫入檔案而遺失。
+
 
 ## 管線化串流
 
