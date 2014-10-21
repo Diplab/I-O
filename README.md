@@ -5,25 +5,25 @@ Thinking in Java Ch 18
 ## Outline
 
 - [前言](#前言)
-- [File Class](#file class)
+- [File Class](#file-class)
 - [位元串流](#位元串流)
-- [InputStream、OutputStream](#inputstream%E3%80%81outputstream)
-  + [FileInputStream、FileOutputStream](#fileinputstream%E3%80%81fileoutputstream)
-  + [ByteArrayInputStream、ByteArrayOutputStream](#bytearrayinputstream%E3%80%81bytearrayoutputstream)
-  + [FilterInputStream、FilterOutputStream](#filterinputstream%E3%80%81filteroutputstream)
-    * [BufferedInputStream、BufferedOutputStream](#bufferedinputstream%E3%80%81bufferedoutputstream)
-    * [DataInputStream、DataOutputStream](#datainputstream%E3%80%81dataoutputstream)
+- [InputStream OutputStream](#inputstream-outputstream)
+  + [FileInputStream FileOutputStream](#fileinputstream-fileoutputstream)
+  + [ByteArrayInputStream ByteArrayOutputStream](#bytearrayinputstream-bytearrayoutputstream)
+  + [FilterInputStream FilterOutputStream](#filterinputstream-filteroutputstream)
+    * [BufferedInputStream BufferedOutputStream](#bufferedinputstream-bufferedoutputstream)
+    * [DataInputStream DataOutputStream](#datainputstream-dataoutputstream)
     * [PrintStream](#printstream)
-  + [ObjectInputStream、ObjectOutputStream](#objectinputstream%E3%80%81objectoutputstream)
+  + [ObjectInputStream ObjectOutputStream](#objectinputstream-objectoutputstream)
 
 - [字元串流](#字元串流)
-- [Reader、Writer](#reader、writer)
-  + [InputStreamReader、OutputStreamWriter](#inputstreamreader%E3%80%81outputstreamwriter)
-    * [FileReader、FileWriter](#filereader%E3%80%81filewriter)
-  + [BufferedReader、BufferedWriter](#bufferedreader%E3%80%81bufferedwriter)
-  + [CharArrayReader、CharArrayWriter](#chararrayreader%E3%80%81chararraywriter)
+- [Reader Writer](#reader-writer)
+  + [InputStreamReade OutputStreamWriter](#inputstreamreader-outputstreamwriter)
+    * [FileReader FileWriter](#filereader-filewriter)
+  + [BufferedReader BufferedWriter](#bufferedreader-bufferedwriter)
+  + [CharArrayReader CharArrayWriter](#chararrayreader-chararraywriter)
   + [PrintWriter](#printwriter)
-- [RandomAccessFile Class](#randomaccessfile class)
+- [RandomAccessFile Class](#randomaccessfile-class)
 - [管線化串流](#管線化串流)
 
 
@@ -79,7 +79,7 @@ public class FileDome {
 - 資料都是以 0 與 1 的方式來儲存
 - 非文字檔
 
-## InputStream、OutputStream
+## InputStream OutputStream
 
 從程式的觀點來說，通常會將資料目的地（例如記憶體）與來源（例如檔案）之間的資料流動抽象化為一個串流（Stream），而當中流動的則是位元資料。
 
@@ -114,7 +114,7 @@ public class StreamDemo {
 } 
 ```
 
-### FileInputStream、FileOutputStream
+### FileInputStream FileOutputStream
 
 - FileInputStream是InputStream的子類，與從指定的檔案中讀取資料至目的地有關，可以指定檔案名稱建構實例，一旦建構檔案就開啟， 接著就可用來讀取資料
 - FileOutputStream是OutputStream的子類，與從來源地寫入資料至指定的檔案中有關，可以指定檔案名稱建構實例，一旦建構檔案就開啟， 接著就可以用來寫出資料
@@ -177,7 +177,7 @@ public class FileStreamDemo {
 ```
 
 
-### ByteArrayInputStream、ByteArrayOutputStream
+### ByteArrayInputStream ByteArrayOutputStream
 
 串流的來源或目的地不一定是檔案，也可以是記憶體中的一個空間，例如一個位元陣列，ByteArrayInputStream、ByteArray OutputStream 即是將位元陣列當作串流輸入來源、輸出目的地的類別。
 
@@ -237,13 +237,13 @@ public class ByteArrayStreamDemo {
 } 
 ```
 
-### FilterInputStream、FilterOutputStream
+### FilterInputStream FilterOutputStream
 InputStream、rOutputStream提供串流的基本操作，如果想要為輸出輸入的資料作進一步處理，可使用以下類別：
 - 具備緩衝區作用：BufferedInputStream、BufferedOutputStream
 - 具備資料轉換處理：DataInputStream、DataOutputStream
 - 具備資料顯示：PrintStream
 
-#### BufferedInputStream、BufferedOutputStream
+#### BufferedInputStream BufferedOutputStream
 在 FileInputStream、 FileOutputStream 的例子中，使用了一個 byte 陣列來作為資料讀入目的地，然後對陣列資料進行處理。為了效率起見，可以儘量讀取多一點的資料。以檔案存取為例的話，磁碟存取的速度是遠低於記憶體中的資料存取速度，為了減少對磁碟的存取，通常從檔案中一次讀入一定長度的資料，而寫入時也是一次寫入一定長度的資料，這可以增加檔案存取的效率。
 
 BufferedInputStream 與 BufferedOutputStream 可以為 InputStream、OutputStream 類的物件增加緩衝區功能，建構 BufferedInputStream 實例時，需要給定一個 InputStream 型態的實例，操作 BufferedInputStream 時，實際上最後是操作 InputStream 實例，同樣的在建構 BufferedOutputStream 時，也需要給定一個 OutputStream 的實例，操作 BufferedOutputStream 時，實際上最後是操作 OutputStream 實例。
@@ -295,7 +295,7 @@ public class BufferedStreamDemo {
 ```
 BufferedInputStream、BufferedOutputStream 並沒有改變 InputStream 或 OutputStream 的行為，讀入或寫出時的動作還是 InputStream、OutputStream 負責，BufferedInputStream、BufferedOutputStream 只是在操作對應的方法之前，為它們加上一些額外功能（像是緩衝區功能）。
 
-#### DataInputStream、DataOutputStream
+#### DataInputStream DataOutputStream
 
 DataInputStream、DataOutputStream 可提供一些對 Java 基本資料型態寫入的方法，像是讀寫 int、double、 boolean 等的方法。
 
@@ -352,63 +352,115 @@ public class DataStreamDemo {
 }
 ```
 #### PrintStream
+之前所介紹過的 OutputStream 物件，都是直接將記憶體中的資料原封不變的寫至目的地（例如一個檔案），下面的例子來說，如果將 int 型態 123 使用 OutputStream 物件輸出至檔案，則檔案中所儲存的是 int 型態 123 在記憶體中的值。產生一個 test.txt 檔案，開啟檔案之後，可能顯示怪異的符號。由於使用 write() 方法，這會將1在記憶體中的值之低位元組 0000001 寫入檔案中，而純文件檔案在顯示檔案內容時，會以作業系統的預設編碼顯示對應的字元。
 
-### ObjectInputStream、ObjectOutputStream
+。
+
+```java
+package print;
+import java.io.*;
+
+public class Test { 
+    public static void main(String[] args) throws IOException { 
+        FileOutputStream file = new FileOutputStream(new File("test.txt")); 
+        file.write(123); 
+        file.close(); 
+    } 
+} 
+```
+
+
+使用 java.io.PrintStream 可以自動進行字元轉換的動作，預設會使用作業系統的編碼來處理對應的字元轉換動作。print() 或 println() 接受 int、char、String、double 等資料型態。
+```java
+package print;
+import java.io.*;
+
+public class PrintStreamDemo {
+    public static void main(String[] args) throws FileNotFoundException {
+        PrintStream printStream = new PrintStream(new FileOutputStream(new File("test2.txt")));
+
+        printStream.println(123);
+        printStream.close();
+    }
+} 
+```
+
+### ObjectInputStream ObjectOutputStream
 
 如果要直接儲存物件，定義該物件的類別必須實作 java.io.Serializable 介面，不過 Serializable 介面中並沒有規範任何必須實作的方法，所以這邊所謂實作的意義，其實像是對物件貼上一個標誌，代表該物件是「可序列化的」（Serializable）。
 
-首先必須先實作一個 User class
+首先必須先實作一個 Book class
 
 ```java
 package object;
 
 import java.io.Serializable;
 
-public class User implements Serializable {
+public class Book implements Serializable{
     private static final long serialVersionUID = 1L;
+    String name;
+    double price; 
     
-    private String name;
-    private int number; 
-
-    public User() { 
-    } 
-
-    public User(String name, int number) { 
-        this.name = name; 
-        this.number = number; 
-    } 
-
-    public void setName(String name) {
-        this.name = name;
+    public Book(String name, double price){
+    	this.name = name;
+    	this.price = price;
     }
-    
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public String getName() { 
-        return name; 
-    } 
-
-    public int getNumber() { 
-        return number; 
-    } 
+	public void show() {
+		System.out.println("書名:" + name);
+		System.out.println("定價:" + price);
+	}
 }
 ```
+serialVersionUID 代表了可序列化物件的版本，如果沒有提供這個訊息，則實作 Serializable 介面的類別會自動依類別名稱、實現的介面、成員等來產生，如果是自動產生的，則下次更改 User (例如增加一個屬性)，則自動產生的 serialVersionUID 也會跟著變更，當從檔案讀回物件時，兩個物件的 serialVersionUID 不相同的話，就會丟出 java.io.InvalidClassException。
 
+在寫入物件時，使用 writeObject() 方法，讀出物件時則使用 readObject() 方法，被讀出的物件都是以 Object 的型態傳回，所以必須將之轉換為物件原來的型態，才能正確的操作被讀回的物件。
+```java
+package object;
+import java.io.*;
 
+public class ObjectDemo {
+
+	public static void main(String[] args) throws Exception{
+		File file = new File("BookIn");
+		Book[] books = new Book[2];
+		books[0] = new Book("Java", 700);
+		books[1] = new Book("C++", 600);
+		FileOutputStream fos = new FileOutputStream(file);
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		for(Object book : books)
+			oos.writeObject(book);
+		oos.close();
+		fos.close();
+		
+		FileInputStream fis = new FileInputStream(file);
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		System.out.println(file.getName() + "檔案內容如下:");
+		try{
+			while(true){
+				((Book)ois.readObject()).show();
+			}
+		}
+		catch(EOFException e){
+			System.out.println("資料讀取完畢");
+		}
+		ois.close();
+		fis.close();
+	}
+}
+
+```
 ## 字元串流
-## Reader、Writer
+## Reader Writer
 
 ![Reader.png](img/Reader.png)
 ![Writer.png](img/Writer.png)
 
 
-### InputStreamReader、OutputStreamWriter
-#### FileReader、FileWriter
+### InputStreamReader OutputStreamWriter
+#### FileReader FileWriter
 
-### BufferedReader、BufferedWriter
-### CharArrayReader、CharArrayWriter
+### BufferedReader BufferedWriter
+### CharArrayReader CharArrayWriter
 ### PrintWriter
 
 ## RandomAccessFile Class
