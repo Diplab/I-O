@@ -25,6 +25,7 @@ Thinking in Java Ch 18
   + [PrintWriter](#printwriter)
 - [RandomAccessFile Class](#randomaccessfile-class)
 - [管線化串流](#管線化串流)
+- [壓縮](#壓縮)
 
 
 ## 前言
@@ -763,3 +764,10 @@ RandomAccessFile 的相關方法操作流程：
 ## 管線化串流
 
 PipedInputStream、PipedOutputStream、PipeReader、PipeWriter。這四種也是串流的一種，但必須等到了解多執行緒後才會了解他的價值。因為管線化 streams 被用於執行緒之間的通訊。
+
+## 壓縮
+
+- GZIP不將文件歸檔，僅只是對單個文件進行壓縮
+- ZIP將文件歸檔和壓縮
+
+要提供壓縮功能，只要把它們包在已有的I/O類的外面即可。這些 class 不是衍生自 Reader 和 Writer ，而是 InputStream 和 OutStreamput 的子類。這是因為壓縮的程式庫是處理 byte 而不是字元的。(可運用 InputStreamReader 和 OutputStreamWriter 提供 streams 之間的轉換)
