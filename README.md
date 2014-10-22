@@ -26,6 +26,7 @@ Thinking in Java Ch 18
 - [RandomAccessFile Class](#randomaccessfile-class)
 - [管線化串流](#管線化串流)
 - [壓縮](#壓縮)
+- [參考文獻](#參考文獻)
 
 
 ## 前言
@@ -803,3 +804,7 @@ public class Gzip {
 }
 
 ```
+## 參考文獻
+- [JAVA SE7 PPT](http://www.slideshare.net/JustinSDK/java-se-7-10)
+- [JAVA 教戰手冊 CH10](https://docs.google.com/file/d/0BxoRjjtYAmGnRVV2dDdqSDcyb2M/edit?pli=1)
+- [JAVA 壓縮](http://fanli7.net/a/JAVAbiancheng/JAVAzonghe/20121112/252373.html)
